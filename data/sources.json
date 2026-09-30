@@ -1,0 +1,44 @@
+[
+  {
+    "id": "decay",
+    "title": "Tooth decay",
+    "url": "https://www.nidcr.nih.gov/health-info/tooth-decay",
+    "checked_on": "2026-09-30",
+    "format": "Original curated paraphrase, not a full page snapshot"
+  },
+  {
+    "id": "gum",
+    "title": "Periodontal gum disease",
+    "url": "https://www.nidcr.nih.gov/health-info/gum-disease",
+    "checked_on": "2026-09-30",
+    "format": "Original curated paraphrase, not a full page snapshot"
+  },
+  {
+    "id": "dry",
+    "title": "Dry mouth xerostomia",
+    "url": "https://www.nidcr.nih.gov/health-info/dry-mouth",
+    "checked_on": "2026-09-30",
+    "format": "Original curated paraphrase, not a full page snapshot"
+  },
+  {
+    "id": "hygiene",
+    "title": "Oral hygiene",
+    "url": "https://www.nidcr.nih.gov/health-info/oral-hygiene",
+    "checked_on": "2026-09-30",
+    "format": "Original curated paraphrase, not a full page snapshot"
+  },
+  {
+    "id": "diabetes",
+    "title": "Diabetes and oral health",
+    "url": "https://www.nidcr.nih.gov/health-info/diabetes",
+    "checked_on": "2026-09-30",
+    "format": "Original curated paraphrase, not a full page snapshot"
+  },
+  {
+    "id": "cancer",
+    "title": "Oral cancer",
+    "url": "https://www.nidcr.nih.gov/health-info/oral-cancer",
+    "checked_on": "2026-09-30",
+    "format": "Original curated paraphrase, not a full page snapshot"
+  }
+]

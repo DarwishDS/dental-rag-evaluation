@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dental RAG · Retrieval Lab</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header><a class="brand" href="/">◈ <span>Dental RAG<span class="brand-sub"> / Retrieval Lab</span></span></a><span class="pill">RESEARCH DEMO</span></header>
+  <main>
+    <section class="intro"><p class="eyebrow">EVIDENCE BEFORE ANSWERS</p><h1>Ask. Retrieve.<br><span>Inspect the evidence.</span></h1><p class="lede">Explore how retrieval strategies find dental information. Every answer connects to an attributed source, with passages and timing available to inspect.</p></section>
+    <div class="status" id="status" role="status">Connecting to the local pipeline…</div>
+    <section class="workspace">
+      <div class="question-panel">
+        <form id="query-form"><label for="question">Your question</label><textarea id="question" name="question" minlength="3" maxlength="2000" required placeholder="How does saliva help protect teeth?"></textarea>
+          <div class="controls"><div><label for="strategy">Retrieval strategy</label><select id="strategy"><option value="dense">Dense semantic</option><option value="bm25">BM25 lexical</option><option value="hybrid">Hybrid · reciprocal rank fusion</option><option value="hybrid_rerank" selected>Hybrid + cross-encoder reranking</option></select></div><button id="submit" type="submit">Find evidence <span>↗</span></button></div>
+        </form>
+        <div class="examples"><span>Try a question</span><button class="example" type="button">Can a cavity exist without pain?</button><button class="example" type="button">Who can remove hardened calculus from teeth?</button><button class="example" type="button">How does saliva help protect teeth?</button></div>
+        <p class="note">For general education only. This demo cannot diagnose symptoms, prescribe treatment, or replace a dentist. Queries are saved in local trace files.</p>
+      </div>
+      <aside><p class="eyebrow">THE EXPERIMENT</p><h2>Four paths.<br>One corpus.</h2><ol><li><strong>Dense</strong><span>Embedding similarity in Qdrant</span></li><li><strong>BM25</strong><span>Exact words and rare terms</span></li><li><strong>Hybrid</strong><span>Combine rankings with RRF</span></li><li><strong>Reranked</strong><span>Score the shortlist with a cross-encoder</span></li></ol><a href="/docs" target="_blank" rel="noopener noreferrer">Explore the API ↗</a></aside>
+    </section>
+    <section id="result" hidden aria-live="polite"><div class="result-heading"><h2>Retrieved answer</h2><span class="pill" id="answer-mode"></span></div><p id="answer"></p><div id="citations"></div><div class="stats" id="stats"></div><h3>Evidence shortlist</h3><p class="note">Scores are specific to each strategy. They are not calibrated probabilities.</p><div id="hits"></div><details><summary>Inspect response JSON</summary><pre id="raw"></pre></details></section>
+    <p id="error" class="error" role="alert" hidden></p>
+  </main><footer><span>Source-backed · Reproducible · Measured</span><span>NIDCR-derived curated corpus / v0.1</span></footer>
+</body></html>
