@@ -16,7 +16,7 @@ def main():
         .split("\0")
     )
     sensitive = re.compile(
-        r"(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|"
+        r"(?:sk-[A-Za-z0-9_-]{20,}|gsk_[A-Za-z0-9]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|"
         r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)"
     )
     for name in filter(None, files):

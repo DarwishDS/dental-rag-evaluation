@@ -15,6 +15,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "ruff>=0.9,<1"]
+llm = ["openai>=1.60,<3"]
 cloud = ["openai>=1.60,<3", "langfuse>=3,<5"]
 eval = ["deepeval>=3,<5"]
 

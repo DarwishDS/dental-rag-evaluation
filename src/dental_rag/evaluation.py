@@ -71,9 +71,9 @@ def evaluate(
     judge=False,
     progress=print,
 ):
-    if judge and pipeline.settings.generator != "openai":
+    if judge and pipeline.settings.generator == "extractive":
         raise ValueError(
-            "Use --generator openai with --judge; extractive scores are not LLM evidence"
+            "Use a cloud generator with --judge; extractive scores are not LLM evidence"
         )
     path = pipeline.settings.data_dir / "eval.jsonl"
     cases = [c for c in load_cases(path, pipeline.chunks) if c["split"] == split]

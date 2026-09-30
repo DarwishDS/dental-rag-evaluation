@@ -11,7 +11,9 @@ from .pipeline import Pipeline
 def main():
     parser = argparse.ArgumentParser(description="Source-backed dental RAG experiments")
     parser.add_argument("--backend", choices=["semantic", "smoke"], default=None)
-    parser.add_argument("--generator", choices=["extractive", "openai"], default=None)
+    parser.add_argument(
+        "--generator", choices=["extractive", "openai", "groq", "gemini"], default=None
+    )
     sub = parser.add_subparsers(dest="command", required=True)
     ask = sub.add_parser("ask")
     ask.add_argument("question")

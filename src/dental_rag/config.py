@@ -8,15 +8,20 @@ load_dotenv(".env", override=False)
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="DENTAL_", env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_prefix="DENTAL_", env_file=".env", extra="ignore", env_ignore_empty=True
+    )
     backend: Literal["semantic", "smoke"] = "semantic"
-    generator: Literal["extractive", "openai"] = "extractive"
+    generator: Literal["extractive", "openai", "groq", "gemini"] = "extractive"
     data_dir: Path = Path("data")
     cache_dir: Path = Path(".cache")
     trace_path: Path = Path("artifacts/traces.jsonl")
     embedding_model: str = "BAAI/bge-small-en-v1.5"
     reranker_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
     openai_model: str = "gpt-4.1-mini"
+    groq_model: str = "openai/gpt-oss-120b"
+    gemini_model: str = "gemini-2.5-flash"
+    gemini_fallback_enabled: bool = True
     judge_model: str = "gpt-4.1-mini"
     top_k: int = 3
     candidate_k: int = 12

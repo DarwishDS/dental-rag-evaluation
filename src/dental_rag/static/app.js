@@ -10,7 +10,7 @@ $('query-form').addEventListener('submit',async(event)=>{
   try{
     const response=await fetch('/api/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:$('question').value,strategy:$('strategy').value,top_k:3})});
     const data=await response.json();if(!response.ok)throw new Error(typeof data.detail==='string'?data.detail:'Please enter a valid question.');
-    $('answer').textContent=data.answer;$('answer-mode').textContent=data.abstained?'ABSTAINED':data.generator.toUpperCase();$('raw').textContent=JSON.stringify(data,null,2);
+    $('answer').textContent=data.answer;$('answer-mode').textContent=data.abstained?'ABSTAINED':`${data.generator.toUpperCase()}${data.model?' · '+data.model:''}${data.fallback_used?' · FALLBACK':''}`;$('raw').textContent=JSON.stringify(data,null,2);
     $('citations').replaceChildren();data.hits.filter(h=>data.cited_ids.includes(h.id)).forEach(h=>$('citations').append(sourceLink(h)));
     $('stats').replaceChildren(...[`${data.retrieval_ms.toFixed(1)} ms retrieval`,`${data.total_ms.toFixed(1)} ms total`,`${data.hits.length} passages`,`Trace ${data.trace_id.slice(0,10)}`].map(t=>textElement('span',t)));
     $('hits').replaceChildren();data.hits.forEach((hit,i)=>{const card=document.createElement('article');card.className='hit'+(data.cited_ids.includes(hit.id)?' cited':'');const heading=textElement('div','', 'hit-heading');heading.append(sourceLink(hit),textElement('span',`#${i+1} · score ${hit.score.toFixed(4)}`));card.append(heading,textElement('p',hit.text),textElement('small',hit.id+' · '+(data.cited_ids.includes(hit.id)?'cited in answer':'retrieved context')));$('hits').append(card);});

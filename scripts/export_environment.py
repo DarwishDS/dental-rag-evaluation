@@ -1,4 +1,5 @@
 """Record dependency versions and downloaded model artifact hashes without private paths."""
+
 import hashlib
 import json
 import subprocess
@@ -24,8 +25,13 @@ def main():
         with path.open("rb") as stream:
             for block in iter(lambda: stream.read(1024 * 1024), b""):
                 digest.update(block)
-        models.append({"artifact": path.relative_to(ROOT / ".cache").as_posix(),
-                       "bytes": path.stat().st_size, "sha256": digest.hexdigest()})
+        models.append(
+            {
+                "artifact": path.relative_to(ROOT / ".cache").as_posix(),
+                "bytes": path.stat().st_size,
+                "sha256": digest.hexdigest(),
+            }
+        )
     destination = ROOT / "reports" / "semantic-test" / "model-artifacts.json"
     destination.write_text(json.dumps(models, indent=2) + "\n", encoding="utf-8")
     print(f"Recorded {len(lines)} dependencies and {len(models)} ONNX artifacts")

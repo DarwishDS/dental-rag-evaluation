@@ -74,9 +74,15 @@ threshold and a short keyword refusal guard. Thresholds are fixed in config befo
 initial test run and are not calibrated clinical confidence scores. The guard is incomplete
 and may reject legitimate educational questions. It does not establish medical safety.
 
-The optional OpenAI generator uses retrieved evidence and returns structured JSON.
+The optional Groq, Gemini, and OpenAI generators use retrieved evidence and return structured JSON.
 Unknown or absent citation IDs cause abstention. Valid IDs do not guarantee that every
 generated claim is supported; evaluate and review the output.
+
+Groq can fall back to Gemini on a provider failure or invalid response when a real Gemini
+key is configured. A valid abstention does not trigger fallback. Responses record the actual
+provider, model, and whether fallback was used. Placeholders are never sent as credentials.
+The initial checked-in benchmark remains an extractive run; live generation is a separate
+validation and does not supply faithfulness scores for the original report.
 
 Every successful query writes a local JSONL trace including question, answer, passages,
 latency, backend, and corpus hash. Local traces may contain sensitive questions and are

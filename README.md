@@ -4,9 +4,10 @@ A working retrieval lab that compares dense search, BM25, hybrid search, and hyb
 with a cross-encoder reranker on source-backed dental questions. It includes a browser
 demo, FastAPI API, experiment CLI, per-question traces, and a versioned evaluation dataset.
 
-**Status:** local semantic retrieval and extractive generation verified. Optional OpenAI,
-DeepEval, and Langfuse integrations are implemented but require your credentials and have
-not been validated against live services. This is an educational portfolio project, not
+**Status:** local semantic retrieval, extractive generation, and live Groq generation with
+`openai/gpt-oss-120b` verified. Gemini fallback is tested with simulated responses and awaits
+a real Gemini key. OpenAI, DeepEval, and Langfuse
+integrations require separate credentials. This is an educational portfolio project, not
 a clinical tool.
 
 ![Local retrieval lab](docs/demo.png)
@@ -16,7 +17,7 @@ a clinical tool.
 - Real BGE-small-en-v1.5 embeddings through FastEmbed/ONNX and Qdrant local cosine search.
 - BM25 + dense retrieval combined through reciprocal rank fusion.
 - ms-marco-MiniLM-L-6-v2 cross-encoder reranking of a 12-passage shortlist.
-- Cited extractive answers by default; optional evidence-constrained OpenAI generation.
+- Cited extractive answers by default; configurable Groq, Gemini, or OpenAI generation.
 - 24 attributed passages, 12 dev questions, and 30 test questions, including unsupported requests.
 - Hit@1, recall@3, MRR@3, nDCG@3, latency, abstention, citation checks, and paired bootstrap intervals.
 - Optional DeepEval faithfulness / answer relevancy and Langfuse tracing.
@@ -88,6 +89,51 @@ faithfulness scores from the default extractive generator.
 
 ## Optional LLM answers, judges, and hosted traces
 
+### Groq primary with Gemini fallback
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e ".[llm]"
+```
+
+Configure your ignored local `.env` (never commit real keys):
+
+```dotenv
+DENTAL_GENERATOR=groq
+GROQ_API_KEY=replace_with_your_groq_api_key
+DENTAL_GROQ_MODEL=openai/gpt-oss-120b
+GEMINI_API_KEY=replace_with_your_gemini_api_key
+DENTAL_GEMINI_MODEL=gemini-2.5-flash
+DENTAL_GEMINI_FALLBACK_ENABLED=true
+```
+
+Then restart the server with `dental-rag serve`, or run:
+
+```powershell
+.\.venv\Scripts\dental-rag.exe --generator groq ask "Who removes tartar?"
+.\.venv\Scripts\dental-rag.exe --generator groq serve
+```
+
+Groq receives the question and retrieved passages and generates structured JSON with
+citation IDs. If its API fails or its output fails validation, the same evidence is sent
+to Gemini **only when a real Gemini key is configured**. Placeholder keys are skipped.
+A valid evidence-based abstention does not trigger fallback. Invalid answers are refused
+and provider failures return an error. `generator`, `model`, `fallback_used`, and a sanitized
+`fallback_reason` are included in the response and trace. Token usage is recorded per
+received attempt; provider exception text and credentials are not recorded.
+
+Replace the Gemini placeholder when ready, then restart. Use `--generator gemini` to call
+it directly, or set `DENTAL_GEMINI_FALLBACK_ENABLED=false` to disable automatic fallback.
+The providers use their official OpenAI-compatible endpoints:
+[Groq](https://console.groq.com/docs/openai) and
+[Gemini](https://ai.google.dev/gemini-api/docs/openai).
+
+Retrieved source material is transmitted to the selected provider. Hosted LLM responses
+are distinct from the checked-in extractive benchmark; rerun evaluation for LLM-quality claims.
+Generation pricing settings apply to the primary provider only; fallback costs remain
+unknown rather than borrowing the primary provider's prices.
+
+### OpenAI judging and Langfuse
+
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -e ".[cloud,eval]"
 ```
@@ -99,7 +145,8 @@ Edit your local `.env` to set `OPENAI_API_KEY`. Then run:
 .\.venv\Scripts\dental-rag.exe --generator openai evaluate --split test --judge --out artifacts/judged
 ```
 
-Generation and DeepEval judging make paid API calls. Model IDs are configurable through
+DeepEval judging requires a separate `OPENAI_API_KEY`, even when answers use Groq.
+Generation and DeepEval judging can incur API charges. Model IDs are configurable through
 `DENTAL_OPENAI_MODEL` and `DENTAL_JUDGE_MODEL`. Check your provider's available models and
 pricing before running. Set explicit input/output prices per million tokens to record
 estimated generation cost; missing prices produce null cost rather than an invented estimate.
